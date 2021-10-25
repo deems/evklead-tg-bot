@@ -8,3 +8,5 @@ BOT_TOKEN = env("BOT_TOKEN")
 REDIS_URL = env("REDIS_URL")
 
 LANG = env('LANG', 'ru')
+
+IS_LOCAL = env('IS_LOCAL', False)
