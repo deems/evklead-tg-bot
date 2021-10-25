@@ -4,5 +4,6 @@
   "score_top_item": "У @%userName% %catsCount% %catsMorph%",
   "score_top_empty": "В топе никого нет",
   "score_top_noun": "котик",
-  "antispam_message": "Попридержи коней, ковбой!"
+  "antispam_message": "Попридержи коней, ковбой!",
+  "news_item": "<b>%title%</b>\n%content%\n<a href=\"%link%\">Подробнее</> \n\n"
 }
