@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  evklead_tg_bot:
+    image: tdeems/evklead-tg-bot
+    container_name: evklead_tg_bot
+    environment:
+      REDIS_URL: redis://redis/1
+    links:
+      - redis
+  redis:
+    image: redis:alpine
+    container_name: redis_evklead_tg_bot
