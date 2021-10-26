@@ -12,3 +12,5 @@ LANG = env('LANG', 'ru')
 IS_LOCAL = env('IS_LOCAL', False)
 
 CHAT_FOR_NEWS = env('CHAT_FOR_NEWS')
+
+RSS_URL = 'https://www.google.ru/alerts/feeds/12027305867459824764/2965769019592255919'

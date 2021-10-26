@@ -12,7 +12,7 @@ from services.locales_service.locales_service import locales_service
 
 class NewsService:
     def __init__(self):
-        self.rss_url = 'https://www.google.ru/alerts/feeds/12027305867459824764/2965769019592255919'
+        self.rss_url = settings.RSS_URL
 
     async def _get_rss(self):
         async with aiohttp.ClientSession() as session:
