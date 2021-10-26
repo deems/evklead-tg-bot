@@ -10,3 +10,5 @@ REDIS_URL = env("REDIS_URL")
 LANG = env('LANG', 'ru')
 
 IS_LOCAL = env('IS_LOCAL', False)
+
+CHAT_FOR_NEWS = env('CHAT_FOR_NEWS')

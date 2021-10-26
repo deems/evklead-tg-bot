@@ -5,6 +5,8 @@ import aiohttp
 import feedparser
 from aiogram import types
 
+import settings
+from bot import bot
 from services.locales_service.locales_service import locales_service
 
 
@@ -36,6 +38,10 @@ class NewsService:
     async def top_news(self, message: types.Message):
         news = await self._process_news()
         await message.reply(''.join(news), parse_mode=types.ParseMode.HTML)
+
+    async def send_top_news(self):
+        news = await self._process_news()
+        await bot.send_message(settings.CHAT_FOR_NEWS, ''.join(news), parse_mode=types.ParseMode.HTML)
 
 
 news_service = NewsService()

@@ -12,6 +12,7 @@ pymorphy2 = "*"
 pymorphy2-dicts-ru = "*"
 environs = "*"
 feedparser = "*"
+aioschedule = "*"
 
 [requires]
 python_version = "3.8"
