@@ -16,7 +16,8 @@ class BotService:
         await message.reply(f'{response}')
 
     async def welcome(self, message: types.Message):
-        pass
+        help_message = locales_service.get_key('help')
+        await message.reply(help_message)
 
 
 bot_service = BotService()
