@@ -5,7 +5,10 @@ from services.locales_service.locales_service import locales_service
 
 class BotService:
     async def on_new_user(self, message: types.Message):
-        new_user_message = locales_service.get_key('hello_message', userName=message.new_chat_members[0].username)
+        user_name = '@'+message.new_chat_members[0].username \
+            if message.new_chat_members[0].username \
+            else message.new_chat_members[0].full_name
+        new_user_message = locales_service.get_key('hello_message', userName=user_name)
         await message.reply(new_user_message)
 
     async def echo(self, message: types.Message):
