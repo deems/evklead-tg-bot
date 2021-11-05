@@ -20,6 +20,8 @@ class ScoreService:
         all_users_names = self.username_regex.findall(message.text)
         if all_users_names:
             username = all_users_names[0]
+            if username == message.from_user.username:
+                return
             antispam_key = f'score_spam_ttl_{message.from_user.id}{username}'
             spam = await redis.get(antispam_key)
             if spam:
