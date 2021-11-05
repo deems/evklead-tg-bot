@@ -2,10 +2,12 @@ import asyncio
 import logging
 
 import aioschedule
+from aiogram import types
 from aiogram.utils import executor
 
-from bot import dp
+from bot import dp, bot
 from services.bot_service import bot_service
+from services.locales_service.locales_service import locales_service
 from services.news_service.news_service import news_service
 from services.score_service.score_service import score_service
 
@@ -29,6 +31,11 @@ async def scheduler():
 
 
 async def on_startup(_):
+    bot_commands = [
+        types.BotCommand(command="/help", description=locales_service.get_key("help_info")),
+        types.BotCommand(command="/cats_top", description=locales_service.get_key("cats_top_info"))
+    ]
+    await bot.set_my_commands(bot_commands)
     asyncio.create_task(scheduler())
 
 
