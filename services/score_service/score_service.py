@@ -18,10 +18,13 @@ class ScoreService:
 
     async def update_score(self, message: types.Message):
         all_users_names = self.username_regex.findall(message.text)
+        username = None
         if all_users_names:
             username = all_users_names[0]
-            if username == message.from_user.username:
-                return
+        elif hasattr(message, 'reply_to_message'):
+            username = message.reply_to_message.from_user.username
+
+        if username and username != message.from_user.username:
             antispam_key = f'score_spam_ttl_{message.from_user.id}{username}'
             spam = await redis.get(antispam_key)
             if spam:
