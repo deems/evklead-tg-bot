@@ -22,7 +22,8 @@ class ScoreService:
         if all_users_names:
             username = all_users_names[0]
         elif hasattr(message, 'reply_to_message'):
-            username = message.reply_to_message.from_user.username
+            if not message.reply_to_message.from_user.is_bot:
+                username = message.reply_to_message.from_user.username
 
         if username and username != message.from_user.username:
             antispam_key = f'score_spam_ttl_{message.from_user.id}{username}'
