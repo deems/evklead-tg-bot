@@ -13,6 +13,7 @@ pymorphy2-dicts-ru = "*"
 environs = "*"
 feedparser = "*"
 aioschedule = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.8"
