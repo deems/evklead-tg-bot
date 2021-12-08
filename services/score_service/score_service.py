@@ -28,7 +28,15 @@ class ScoreService:
                 elif message.reply_to_message.from_user.first_name:
                     username = message.reply_to_message.from_user.first_name
 
-        if username and username != message.from_user.username:
+        if username:
+            #поверка от начисления самому себе
+            if message.from_user.username:
+                if username == message.from_user.username:
+                    return
+            elif message.from_user.first_name:
+                if username == message.from_user.first_name:
+                    return
+
             antispam_key = f'score_spam_ttl_{message.from_user.id}{username}'
             spam = await redis.get(antispam_key)
             if spam:
