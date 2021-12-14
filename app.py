@@ -36,7 +36,7 @@ def register_handlers():
 
 
 async def scheduler():
-    aioschedule.every().minute.at(":00").do(news_service.send_top_news)
+    aioschedule.every(10).minutes.do(news_service.send_top_news)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
