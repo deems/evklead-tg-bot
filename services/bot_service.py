@@ -1,5 +1,6 @@
 from aiogram import types
 
+from services.likes_service.like_service import like_service
 from services.locales_service.locales_service import locales_service
 
 
@@ -12,11 +13,8 @@ class BotService:
         await message.reply(new_user_message, disable_web_page_preview=True)
 
     async def echo(self, message: types.Message):
-        if 'привет' in message.text:
-            response = 'хуивет'
-        else:
-            response = message.text
-        await message.reply(f'{response}')
+        buttons = await like_service.get_likes_buttons()
+        await message.reply(message.text, reply_markup=buttons)
 
     async def welcome(self, message: types.Message):
         help_message = locales_service.get_key('help')

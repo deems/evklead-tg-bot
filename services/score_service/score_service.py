@@ -60,7 +60,7 @@ class ScoreService:
                 score = round(user_score[1])
                 scores_list.append(locales_service.
                                    get_key('score_top_item',
-                                           userName=user_score[0].decode(),
+                                           userName=user_score[0],
                                            catsCount=score,
                                            catsMorph=self.cats_morph.make_agree_with_number(score).word))
             reply = '\n'.join(scores_list)

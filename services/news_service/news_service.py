@@ -7,6 +7,7 @@ from aiogram import types
 import settings
 from bot import bot
 from redis_pool import redis
+from services.likes_service.like_service import like_service
 from services.locales_service.locales_service import locales_service
 
 
@@ -27,7 +28,7 @@ class NewsService:
         result: List[str] = []
         last_news_id = await redis.get('last_news_id')
         if last_news_id:
-            last_news_id = last_news_id.decode()
+            last_news_id = last_news_id
         for item in feed['items']:
             if last_news_id and last_news_id == item['id']:
                 break
@@ -50,9 +51,13 @@ class NewsService:
             await message.reply('новых новстей нет')
 
     async def send_top_news(self):
+        buttons = await like_service.get_likes_buttons()
         news = await self._process_news()
         if news:
-            await bot.send_message(settings.CHAT_FOR_NEWS, ''.join(news), parse_mode=types.ParseMode.HTML)
+            for item in news:
+                await bot.send_message(settings.CHAT_FOR_NEWS, item,
+                                       parse_mode=types.ParseMode.HTML,
+                                       reply_markup=buttons)
 
 
 news_service = NewsService()
