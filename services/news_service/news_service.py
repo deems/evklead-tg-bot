@@ -51,9 +51,9 @@ class NewsService:
             await message.reply('новых новстей нет')
 
     async def send_top_news(self):
-        buttons = await like_service.get_likes_buttons()
         news = await self._process_news()
         if news:
+            buttons = await like_service.get_likes_buttons()
             for item in news:
                 await bot.send_message(settings.CHAT_FOR_NEWS, item,
                                        parse_mode=types.ParseMode.HTML,

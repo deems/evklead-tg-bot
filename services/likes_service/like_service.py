@@ -39,9 +39,9 @@ class LikeService:
             likes_count = await self._get_likes(ActionType.LIKE, chat_id, message_id)
             dislikes_count = await self._get_likes(ActionType.DISLIKE, chat_id, message_id)
 
-        buttons = [types.InlineKeyboardButton(text=f"👍 {likes_count if likes_count else ''}",
+        buttons = [types.InlineKeyboardButton(text=f"🔥 {likes_count if likes_count else ''}",
                                               callback_data=self.callback_likes.new(action=ActionType.LIKE.value)),
-                   types.InlineKeyboardButton(text=f"👎 {dislikes_count if dislikes_count else ''}",
+                   types.InlineKeyboardButton(text=f"💩 {dislikes_count if dislikes_count else ''}",
                                               callback_data=self.callback_likes.new(action=ActionType.DISLIKE.value))]
         keyboard.row(*buttons)
 
