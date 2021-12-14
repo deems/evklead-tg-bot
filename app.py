@@ -28,7 +28,7 @@ def register_handlers():
     # dp.register_message_handler(news_service.top_news, commands=['news'])
     dp.register_message_handler(score_service.get_top, commands=['cats_top'])
     dp.register_message_handler(score_service.update_score, regexp='спасибо|\+')
-    #dp.register_message_handler(bot_service.echo)
+    # dp.register_message_handler(bot_service.echo)
 
     dp.register_callback_query_handler(like_service.like_query_handler,
                                        like_service.callback_likes.filter(action=[ActionType.LIKE.value,
@@ -36,7 +36,7 @@ def register_handlers():
 
 
 async def scheduler():
-    aioschedule.every().hour.at(":00").do(news_service.send_top_news)
+    aioschedule.every().minute.at(":00").do(news_service.send_top_news)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

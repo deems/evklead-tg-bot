@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 import aiohttp
@@ -9,33 +10,38 @@ from bot import bot
 from redis_pool import redis
 from services.likes_service.like_service import like_service
 from services.locales_service.locales_service import locales_service
+from services.news_service.data.news_item import NewsItem
 
 
 class NewsService:
     def __init__(self):
         self.rss_url = settings.RSS_URL
-        self.news_max_count = 3
+        self.news_max_count = 1
 
     async def _get_rss(self):
         async with aiohttp.ClientSession() as session:
             async with session.get(self.rss_url, ssl=False) as resp:
                 return await resp.text()
 
-    async def _process_news(self) -> List[str]:
+    async def _process_news(self) -> List[NewsItem]:
         xml = await self._get_rss()
         feed = feedparser.parse(xml)
 
-        result: List[str] = []
+        result: List[NewsItem] = []
         last_news_id = await redis.get('last_news_id')
         if last_news_id:
             last_news_id = last_news_id
         for item in feed['items']:
             if last_news_id and last_news_id == item['id']:
                 break
-            result.append(locales_service.get_key("news_item",
-                                                  title=item["title"],
-                                                  content=item["content"][0]["value"],
-                                                  link=item["link"]))
+            news_item = NewsItem(
+                text=locales_service.get_key("news_item",
+                                             title=item["title"],
+                                             content=re.sub('<[^<]+?>', '', item["description"]),
+                                             link=item["link"]),
+                img_url=item['media_content'][0]['url']
+            )
+            result.append(news_item)
             if len(result) > self.news_max_count:
                 break
         if result:
@@ -46,18 +52,22 @@ class NewsService:
     async def top_news(self, message: types.Message):
         news = await self._process_news()
         if news:
-            await message.reply(''.join(news), parse_mode=types.ParseMode.HTML)
-        else:
-            await message.reply('новых новстей нет')
+            buttons = await like_service.get_likes_buttons()
+            for item in news:
+                await bot.send_photo(message.chat.id, item.img_url,
+                                     caption=item.text,
+                                     parse_mode=types.ParseMode.HTML,
+                                     reply_markup=buttons)
 
     async def send_top_news(self):
         news = await self._process_news()
         if news:
             buttons = await like_service.get_likes_buttons()
             for item in news:
-                await bot.send_message(settings.CHAT_FOR_NEWS, item,
-                                       parse_mode=types.ParseMode.HTML,
-                                       reply_markup=buttons)
+                await bot.send_photo(settings.CHAT_FOR_NEWS, item.img_url,
+                                     caption=item.text,
+                                     parse_mode=types.ParseMode.HTML,
+                                     reply_markup=buttons)
 
 
 news_service = NewsService()
