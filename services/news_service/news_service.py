@@ -29,10 +29,9 @@ class NewsService:
 
         result: List[NewsItem] = []
         last_news_id = await redis.get('last_news_id')
-        if last_news_id:
-            last_news_id = last_news_id
+
         for item in feed['items']:
-            if last_news_id and last_news_id == item['id']:
+            if last_news_id and last_news_id == item['guid']:
                 break
             news_item = NewsItem(
                 text=locales_service.get_key("news_item",
@@ -46,7 +45,7 @@ class NewsService:
                 break
         if result:
             # сохраним id самой свежей новости
-            await redis.set('last_news_id', feed['items'][0]['id'])
+            await redis.set('last_news_id', feed['items'][0]['guid'])
         return result
 
     async def top_news(self, message: types.Message):
