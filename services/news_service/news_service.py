@@ -1,3 +1,4 @@
+import hashlib
 import re
 from typing import List
 
@@ -16,7 +17,7 @@ from services.news_service.data.news_item import NewsItem
 class NewsService:
     def __init__(self):
         self.rss_url = settings.RSS_URL
-        self.news_max_count = 1
+        self.news_max_count = 3
 
     async def _get_rss(self):
         async with aiohttp.ClientSession() as session:
@@ -31,7 +32,7 @@ class NewsService:
         last_news_id = await redis.get('last_news_id')
 
         for item in feed['items']:
-            if last_news_id and last_news_id == item['guid']:
+            if last_news_id and last_news_id == hashlib.md5(item['link']).hexdigest():
                 break
             news_item = NewsItem(
                 text=locales_service.get_key("news_item",
@@ -41,11 +42,11 @@ class NewsService:
                 img_url=item['media_content'][0]['url']
             )
             result.append(news_item)
-            if len(result) > self.news_max_count:
+            if len(result) >= self.news_max_count:
                 break
         if result:
             # сохраним id самой свежей новости
-            await redis.set('last_news_id', feed['items'][0]['guid'])
+            await redis.set('last_news_id', hashlib.md5(feed['items'][0]['link']).hexdigest())
         return result
 
     async def top_news(self, message: types.Message):
