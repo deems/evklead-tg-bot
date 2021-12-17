@@ -32,7 +32,7 @@ class NewsService:
         last_news_id = await redis.get('last_news_id')
 
         for item in feed['items']:
-            if last_news_id and last_news_id == hashlib.md5(item['link']).hexdigest():
+            if last_news_id and last_news_id == hashlib.md5(item['link'].encode('utf-8')).hexdigest():
                 break
             news_item = NewsItem(
                 text=locales_service.get_key("news_item",
@@ -46,7 +46,7 @@ class NewsService:
                 break
         if result:
             # сохраним id самой свежей новости
-            await redis.set('last_news_id', hashlib.md5(feed['items'][0]['link']).hexdigest())
+            await redis.set('last_news_id', hashlib.md5(feed['items'][0]['link'].encode('utf-8')).hexdigest())
         return result
 
     async def top_news(self, message: types.Message):
