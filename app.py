@@ -48,7 +48,7 @@ async def on_startup(_):
         types.BotCommand(command="/cats_top", description=locales_service.get_key("cats_top_info"))
     ]
     await bot.set_my_commands(bot_commands)
-    #asyncio.create_task(scheduler())
+    asyncio.create_task(scheduler())
 
 
 if __name__ == '__main__':
