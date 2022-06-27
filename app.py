@@ -9,8 +9,6 @@ from aiogram.utils import executor
 import settings
 from bot import dp, bot
 from services.bot_service import bot_service
-from services.likes_service.data.like_type import ActionType
-from services.likes_service.like_service import like_service
 from services.locales_service.locales_service import locales_service
 from services.news_service.news_service import news_service
 from services.score_service.score_service import score_service
@@ -25,14 +23,9 @@ sentry_sdk.init(
 def register_handlers():
     dp.register_message_handler(bot_service.on_new_user, content_types=['new_chat_members'])
     dp.register_message_handler(bot_service.welcome, commands=['start', 'help'])
-    # dp.register_message_handler(news_service.top_news, commands=['news'])
     dp.register_message_handler(score_service.get_top, commands=['cats_top'])
-    dp.register_message_handler(score_service.update_score, regexp='спасибо')
+    dp.register_message_handler(score_service.update_score, regexp='спасибо|благодарю')
     # dp.register_message_handler(bot_service.echo)
-
-    dp.register_callback_query_handler(like_service.like_query_handler,
-                                       like_service.callback_likes.filter(action=[ActionType.LIKE.value,
-                                                                                  ActionType.DISLIKE.value]))
 
 
 async def scheduler():
